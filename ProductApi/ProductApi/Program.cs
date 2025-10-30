@@ -1,6 +1,21 @@
-var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
+using ProductApi.Models;
+using ProductApi.Repository;
 
-app.MapGet("/", () => "Hello World!");
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddControllers();   
+builder.Services.AddScoped<IProductRepo<Product>, ProductService>();
+
+var app = builder.Build();
+if (builder.Environment.IsProduction())
+{
+    app.UseDeveloperExceptionPage();
+}
+
+app.UseRouting();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 
 app.Run();
