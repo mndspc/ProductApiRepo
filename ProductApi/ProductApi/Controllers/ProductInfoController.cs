@@ -65,9 +65,9 @@ namespace ProductApi.Controllers
         [HttpPut("UpdateProduct/{id?}")]
         [Produces("application/json")]
         [Consumes("application/json")]
-        public IActionResult UpdateProduct(int? id, [FromBody] Product product)
+        public IActionResult UpdateProduct([FromBody] Product product)
         {
-            var existingProduct = _productRepo.GetProductById(id);
+            var existingProduct = _productRepo.GetProductById(product.ProductId);
             if (existingProduct is not null && product is not null)
             {
                 var updatedProduct = _productRepo.UpdateProduct(product);
@@ -75,11 +75,11 @@ namespace ProductApi.Controllers
             }
             else
             {
-                return NotFound($"Product with Id: {id} not found or product data is null.");
+                return NotFound($"Product with Id: {product.ProductId} not found or product data is null.");
             }
         }
 
-        [HttpDelete("DeleteProduct")]
+        [HttpDelete("DeleteProduct/{id}")]
         [Produces("application/json")]
         public IActionResult DeleteProduct(int? id)
         {

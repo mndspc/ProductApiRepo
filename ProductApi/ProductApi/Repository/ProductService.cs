@@ -7,7 +7,7 @@ namespace ProductApi.Repository
         static List<Product> products = new List<Product>
         {
             new Product { ProductId=1001,ProductName="Toothpaste",ProductCategory="FMCG"},
-            new Product { ProductId=1002,ProductName="Shampoo",ProductCategory="FMCG"},
+            new Product { ProductId=1002,ProductName="Conditionor",ProductCategory="FMCG"},
             new Product { ProductId=1003,ProductName="Mobile Phone",ProductCategory="Gadgets"},
             new Product { ProductId=1004,ProductName="Headphone",ProductCategory="Gadgets"}
         };
