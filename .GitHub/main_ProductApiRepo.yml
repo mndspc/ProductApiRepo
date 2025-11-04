@@ -1,1 +1,49 @@
 
+name: Build and Deploy .NET 8 App to Azure App Service
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  DOTNET_VERSION: '8.0.x'   # Use .NET 8 SDK
+  PROJECT_PATH: 'ProductApi/ProductApi/ProductApi.csproj'
+  PUBLISH_DIR: './publish_output'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ Checkout the source code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2️⃣ Setup .NET SDK
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      # 3️⃣ Restore NuGet packages
+      - name: Restore dependencies
+        run: dotnet restore ${{ env.PROJECT_PATH }}
+
+      # 4️⃣ Build the project in Release mode
+      - name: Build
+        run: dotnet build ${{ env.PROJECT_PATH }} --configuration Release --no-restore
+
+      # 5️⃣ Publish the project
+      - name: Publish
+        run: dotnet publish ${{ env.PROJECT_PATH }} -c Release -o ${{ env.PUBLISH_DIR }}
+
+      # 6️⃣ Deploy to Azure Web App
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'productapp2525'        # 👈 Replace with your Azure Web App name
+          slot-name: 'production'                  # Optional: 'staging' if you use deployment slots
+          publish-profile: ${{ secrets.APP_PUBLISH_SECRET }}
+          package: ${{ env.PUBLISH_DIR }}
